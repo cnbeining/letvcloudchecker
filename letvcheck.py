@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #coding:utf-8
-# Author: Beining  --<ACICFG>
+# Author: Beining --<ACICFG>
 # Purpose: Batch check whether the Letvcloud file's statues.
 # Created: 08/02/2014
 
@@ -32,17 +32,24 @@ def check_upload(source_id):
     try:
         response = urllib.request.urlopen(request_info)
         data = response.read()
-        message = json.loads(data.decode('utf-8'))['message']
-        user_id = json.loads(data.decode('utf-8'))['data']['video_info']['user_id']
-        video_name = json.loads(data.decode('utf-8'))['data']['video_info']['video_name']
-        video_duration = json.loads(data.decode('utf-8'))['data']['video_info']['video_duration']
-        add_time = json.loads(data.decode('utf-8'))['data']['video_info']['add_time']
-        user_unique = json.loads(data.decode('utf-8'))['data']['user_info']['user_unique']
-        video_type_set = json.loads(data.decode('utf-8'))['data']['user_info']['video_type_set']
-        for i in json.loads(data.decode('utf-8'))['data']['video_info']['media']:
-            type_avalable = type_avalable + json.loads(data.decode('utf-8'))['data']['video_info']['media'][i]['video_type']
+        info = json.loads(data.decode('utf-8'))
+        #print(info['code'])
+        if info['code'] == 0:
+            message = info['message']
+            user_id = info['data']['video_info']['user_id']
+            video_name = info['data']['video_info']['video_name']
+            video_duration = info['data']['video_info']['video_duration']
+            add_time = info['data']['video_info']['add_time']
+            user_unique = info['data']['user_info']['user_unique']
+            video_type_set = info['data']['user_info']['video_type_set']
+            for i in info['data']['video_info']['media']:
+                type_avalable = type_avalable + info['data']['video_info']['media'][i]['video_type'] + ';'
+        else:
+            print(source_id + ': '+info['message'])
+            return str(source_id + ': '+info['message'])
     except:
-        return 'Cannot check '+source_id+' !'
+        print('ERROR: Cannot check '+source_id+' !')
+        return 'ERROR: Cannot check '+source_id+' !'
     line_to_write_this = source_id + ',' + message + ',' + video_name + ',' + video_duration + ',' + add_time + ',' + user_id + ',' + type_avalable
     print(line_to_write_this)
     return line_to_write_this
