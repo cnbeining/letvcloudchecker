@@ -11,8 +11,6 @@ import json
 import hashlib
 import getopt
 
-global line_to_write
-line_to_write = ''
 
 #----------------------------------------------------------------------
 def check_upload(source_id):
@@ -45,11 +43,11 @@ def check_upload(source_id):
             for i in info['data']['video_info']['media']:
                 type_avalable = type_avalable + info['data']['video_info']['media'][i]['video_type'] + ';'
         else:
-            print(source_id + ': '+info['message'])
-            return str(source_id + ': '+info['message'])
+            print(source_id + ','+info['message'])
+            return str(source_id + ','+info['message'])
     except:
-        print('ERROR: Cannot check '+source_id+' !')
-        return 'ERROR: Cannot check '+source_id+' !'
+        print(source_id + ',ERROR: Cannot check!')
+        return str(source_id + ',ERROR: Cannot check!')
     line_to_write_this = source_id + ',' + message + ',' + video_name + ',' + video_duration + ',' + add_time + ',' + user_id + ',' + type_avalable
     print(line_to_write_this)
     return line_to_write_this
@@ -58,7 +56,7 @@ def check_upload(source_id):
 def usage():
     """"""
     print('''Usage:
-    python3 letvcheck.py (-h)( -s) vu1 vu2
+    python3 letvcheck.py (-h)(-s 1.csv) vu1 vu2
     -s: Save to CSV file.
     -h: Help.''')
 
